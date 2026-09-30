@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>No-show cost calculator for salons and clinics</title>
+<meta name="description" content="Free calculator: what no-shows and late cancellations cost your salon or clinic per week, month and year, and what an automated reminder flow could recover.">
+<style>
+:root{--ink:#1c2733;--mut:#5d6b7a;--line:#dfe6ee;--bg:#f7f9fb;--acc:#0f6f5c;--acc2:#0b4f42;--warn:#a8442a;--card:#fff}
+*{box-sizing:border-box}
+body{margin:0;font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--ink);background:var(--bg)}
+main{max-width:860px;margin:0 auto;padding:24px 18px 64px}
+header h1{font-size:1.45rem;margin:0 0 6px}
+header p.sub{color:var(--mut);margin:0 0 4px}
+.langbar{margin:10px 0 18px}
+.langbar button{font:inherit;border:1px solid var(--line);background:var(--card);padding:4px 12px;border-radius:6px;cursor:pointer;color:var(--mut)}
+.langbar button[aria-pressed="true"]{background:var(--acc);border-color:var(--acc);color:#fff}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media(max-width:700px){.grid{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 18px}
+.card h2{font-size:1.02rem;margin:0 0 12px}
+label{display:block;font-size:.86rem;color:var(--mut);margin:10px 0 4px}
+input[type=number]{width:100%;font:inherit;padding:7px 9px;border:1px solid var(--line);border-radius:6px}
+input[type=range]{width:100%;accent-color:var(--acc)}
+.val{font-variant-numeric:tabular-nums}
+.row{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:8px 0;border-bottom:1px solid var(--line)}
+.row:last-child{border-bottom:none}
+.row .k{color:var(--mut);font-size:.9rem}
+.row .v{font-weight:600;font-variant-numeric:tabular-nums}
+.row.big .v{font-size:1.35rem;color:var(--warn)}
+.row.gain .v{color:var(--acc)}
+.note{font-size:.8rem;color:var(--mut);margin-top:10px}
+footer{margin-top:26px;font-size:.85rem;color:var(--mut)}
+footer a{color:var(--acc)}
+.badge{display:inline-block;font-size:.72rem;letter-spacing:.04em;text-transform:uppercase;color:var(--acc2);border:1px solid var(--acc);border-radius:4px;padding:1px 7px;margin-left:6px;vertical-align:2px}
+</style>
+</head>
+<body>
+<main>
+<header>
+<h1 id="t-title">No-show cost calculator <span class="badge">free tool</span></h1>
+<p class="sub" id="t-sub">For salons, clinics and studios. No signup, runs in your browser, nothing is sent anywhere.</p>
+<div class="langbar" role="group" aria-label="Language">
+<button id="btn-en" aria-pressed="true" onclick="setLang('en')">English</button>
+<button id="btn-nl" aria-pressed="false" onclick="setLang('nl')">Nederlands</button>
+</div>
+</header>
+
+<div class="grid">
+<section class="card" aria-labelledby="h-in">
+<h2 id="h-in">Your numbers</h2>
+<label for="appt" id="l-appt">Appointments per week</label>
+<input type="number" id="appt" min="1" max="2000" step="1" value="120" inputmode="numeric">
+
+<label for="rate" id="l-rate"><span id="rate-out" class="val">12</span>% <span id="l-rate2">no-show + late-cancel rate</span></label>
+<input type="range" id="rate" min="0" max="40" step="0.5" value="12" aria-describedby="rate-out">
+
+<label for="value" id="l-value">Average revenue per appointment (&euro;)</label>
+<input type="number" id="value" min="1" max="2000" step="1" value="65" inputmode="numeric">
+
+<label for="target"><span id="l-target1">Target rate after reminders:</span> <span id="target-out" class="val">4</span>%</label>
+<input type="range" id="target" min="0" max="40" step="0.5" value="4">
+<p class="note" id="t-note">Set the target yourself. Reminder results vary by business; this tool claims no fixed improvement.</p>
+</section>
+
+<section class="card" aria-labelledby="h-out">
+<h2 id="h-out">What it costs you</h2>
+<div class="row big"><span class="k" id="l-lostmonth">Lost per month</span><span class="v" id="o-lostmonth">&euro;0</span></div>
+<div class="row"><span class="k" id="l-lostweek">Lost per week</span><span class="v" id="o-lostweek">&euro;0</span></div>
+<div class="row"><span class="k" id="l-lostyear">Lost per year</span><span class="v" id="o-lostyear">&euro;0</span></div>
+<div class="row"><span class="k" id="l-missappt">Missed appointments per month</span><span class="v" id="o-missappt">0</span></div>
+<h2 style="margin-top:18px" id="h-rec">If reminders bring you to the target</h2>
+<div class="row gain"><span class="k" id="l-recover">Recovered per month</span><span class="v" id="o-recover">&euro;0</span></div>
+<div class="row gain"><span class="k" id="l-recoveryear">Recovered per year</span><span class="v" id="o-recoveryear">&euro;0</span></div>
+<div class="row"><span class="k" id="l-saveappt">Appointments saved per month</span><span class="v" id="o-saveappt">0</span></div>
+</section>
+</div>
+
+<footer>
+<p id="t-foot1">Built by Vlotstroom. We sell a ready-made n8n automation pack for salons and clinics (appointment reminders, no-show rescue, waitlist autofill and more) for &euro;29:</p>
+<p><a href="https://vlotstream.gumroad.com/l/rhmxw" id="t-link" rel="noopener">Afspraakpack for n8n</a></p>
+<p id="t-foot2">Plain math: weekly loss = appointments &times; rate &times; average value. Month = 4.33 weeks.</p>
+</footer>
+</main>
+<script>
+var I18N={
+ en:{sub:"For salons, clinics and studios. No signup, runs in your browser, nothing is sent anywhere.",
+  "l-appt":"Appointments per week","l-rate2":"no-show + late-cancel rate","l-value":"Average revenue per appointment (\u20ac)",
+  "l-target1":"Target rate after reminders:","l-lostmonth":"Lost per month","l-lostweek":"Lost per week","l-lostyear":"Lost per year",
+  "l-missappt":"Missed appointments per month","h-rec":"If reminders bring you to the target","l-recover":"Recovered per month",
+  "l-recoveryear":"Recovered per year","l-saveappt":"Appointments saved per month",
+  "t-note":"Set the target yourself. Reminder results vary by business; this tool claims no fixed improvement.",
+  "t-foot1":"Built by Vlotstroom. We sell a ready-made n8n automation pack for salons and clinics (appointment reminders, no-show rescue, waitlist autofill and more) for \u20ac29:",
+  "t-foot2":"Plain math: weekly loss = appointments \u00d7 rate \u00d7 average value. Month = 4.33 weeks."},
+ nl:{sub:"Voor salons, klinieken en studios. Geen account nodig, draait in je browser, er wordt niets verstuurd.",
+  "l-appt":"Afspraken per week","l-rate2":"no-show + te-late-afzegging percentage","l-value":"Gemiddelde omzet per afspraak (\u20ac)",
+  "l-target1":"Doelpercentage na herinneringen:","l-lostmonth":"Verlies per maand","l-lostweek":"Verlies per week","l-lostyear":"Verlies per jaar",
+  "l-missappt":"Gemiste afspraken per maand","h-rec":"Als herinneringen je op het doel brengen","l-recover":"Teruggewonnen per maand",
+  "l-recoveryear":"Teruggewonnen per jaar","l-saveappt":"Geredde afspraken per maand",
+  "t-note":"Stel het doel zelf in. Resultaten van herinneringen verschillen per bedrijf; deze tool belooft geen vaste verbetering.",
+  "t-foot1":"Gemaakt door Vlotstroom. Wij verkopen een kant-en-klare n8n-automatiseringspack voor salons en klinieken (afspraakherinneringen, no-show rescue, wachtlijst-autofill en meer) voor \u20ac29:",
+  "t-foot2":"Simpele rekensom: weekverlies = afspraken \u00d7 percentage \u00d7 gemiddelde waarde. Maand = 4,33 weken."}
+};
+var ids=["sub","l-appt","l-rate2","l-value","l-target1","l-lostmonth","l-lostweek","l-lostyear","l-missappt","h-rec","l-recover","l-recoveryear","l-saveappt","t-note","t-foot1","t-foot2"];
+function setLang(l){
+ document.documentElement.lang=l;
+ for(var i=0;i<ids.length;i++){var el=document.getElementById(ids[i]);if(el)el.textContent=I18N[l][ids[i]];}
+ document.getElementById("btn-en").setAttribute("aria-pressed",l==="en");
+ document.getElementById("btn-nl").setAttribute("aria-pressed",l==="nl");
+ calc();
+}
+function fmtEUR(n){return"\u20ac"+n.toLocaleString("en-US",{maximumFractionDigits:0});}
+function calc(){
+ var appt=Math.max(1,parseFloat(document.getElementById("appt").value)||0);
+ var rate=parseFloat(document.getElementById("rate").value)||0;
+ var val=Math.max(0,parseFloat(document.getElementById("value").value)||0);
+ var target=parseFloat(document.getElementById("target").value)||0;
+ if(target>rate)target=rate;
+ document.getElementById("rate-out").textContent=rate;
+ document.getElementById("target-out").textContent=target;
+ var weekLoss=appt*(rate/100)*val;
+ var monthLoss=weekLoss*4.33;
+ var yearLoss=weekLoss*52;
+ var monthMiss=appt*(rate/100)*4.33;
+ var recMonth=appt*((rate-target)/100)*val*4.33;
+ var recYear=recMonth*12;
+ var saveMonth=appt*((rate-target)/100)*4.33;
+ document.getElementById("o-lostweek").textContent=fmtEUR(weekLoss);
+ document.getElementById("o-lostmonth").textContent=fmtEUR(monthLoss);
+ document.getElementById("o-lostyear").textContent=fmtEUR(yearLoss);
+ document.getElementById("o-missappt").textContent=Math.round(monthMiss);
+ document.getElementById("o-recover").textContent=fmtEUR(recMonth);
+ document.getElementById("o-recoveryear").textContent=fmtEUR(recYear);
+ document.getElementById("o-saveappt").textContent=Math.round(saveMonth);
+}
+["appt","rate","value","target"].forEach(function(id){document.getElementById(id).addEventListener("input",calc);});
+calc();
+</script>
+</body>
+</html>
