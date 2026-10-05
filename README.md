@@ -17,3 +17,5 @@ https://vlotstroom.github.io/noshow-calculator/
 Built by Vlotstroom. We also sell a ready-made n8n automation pack for
 salons and clinics (appointment reminders, no-show rescue, waitlist
 autofill and more): https://vlotstream.gumroad.com/l/rhmxw
+
+Related free tool: waitlist fill-rate calculator — how many cancelled slots your waitlist can actually refill (EN/NL, no signup): https://vlotstroom.github.io/waitlist-calculator/
